@@ -1,4 +1,4 @@
-# acrcloud_sdk_python
+# acrcloud_sdk_python(Python 2.7)
 create "ACRCloud Fingerprint" by Audio/Video file, and use "ACRCloud Fingerprint" to recognize metainfos by "ACRCloud webapi".
 
 # Overview
