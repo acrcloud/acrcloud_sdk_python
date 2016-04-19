@@ -19,12 +19,12 @@ if __name__ == '__main__':
         Video: mp4, mkv, wmv, flv, ts, avi ...'''
     re = ACRCloudRecognizer(config)
 
-    #recognize by file path, and skip 180 seconds from from the beginning of sys.argv[1].
-    print re.recognize_by_file(sys.argv[1], 180)
+    #recognize by file path, and skip 0 seconds from from the beginning of sys.argv[1].
+    print re.recognize_by_file(sys.argv[1], 0)
 
     buf = open(sys.argv[1], 'rb').read()
     #recognize by file_audio_buffer that read from file path, and skip 180 seconds from from the beginning of sys.argv[1].
-    print re.recognize_by_filebuffer(buf, 180)
+    print re.recognize_by_filebuffer(buf, 0)
 
     #aa.wav must be (RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz)
     #buf = open('aa.wav', 'rb').read()
