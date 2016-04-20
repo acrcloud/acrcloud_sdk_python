@@ -1,18 +1,21 @@
-# acrcloud_sdk_python(Python 2.7)
-create "ACRCloud Fingerprint" by Audio/Video file, and use "ACRCloud Fingerprint" to recognize metainfos by "ACRCloud webapi".
-
 # Overview
-This module can recognize ACRCloud by most of audio/video file.<br>
+  [ACRCloud](https://www.acrcloud.com/) provides cloud ACR services to help excellent companies and developers build Audio Fingerprinting based applications such as **Audio Recognition** (supports music, video, ads for both online and offline), **Broadcast Monitoring**, **Second Screen Interaction**, **Copyright Detection** and etc.<br>
+  This java SDK can recognize ACRCloud by most of audio/video file. create "ACRCloud Fingerprint" by Audio/Video file, and use "ACRCloud Fingerprint" to recognize metainfos by "ACRCloud webapi".<br>
 >>>>Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...<br>
 >>>>Video: mp4, mkv, wmv, flv, ts, avi ...
- 
+
 # ACRCloud
 Docs: [https://docs.acrcloud.com/](https://docs.acrcloud.com/)<br>
 Console: [https://console.acrcloud.com/](https://console.acrcloud.com/)
 
 # Windows Runtime Library 
+**If you run the SDK on Windows, you must install this library.**<br>
 X86: [download and install Library(windows/vcredist_x86.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=5555)<br>
 x64: [download and install Library(windows/vcredist_x64.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=14632)
+
+# Note
+1. You must not modify package name "com.acrcloud.utils".<br>
+2. If you run the SDK on Windows, you must install library(vcredist).
 
 # Functions
 Introduction all API.
