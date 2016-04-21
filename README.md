@@ -80,8 +80,9 @@ from acrcloud.recognizer import ACRCloudRecognizer
 
 if __name__ == '__main__':
     config = {
-        'host':'ap-southeast-1.api.acrcloud.com',
-        'access_key':'XXXXXXXX', #Replace "xxxxxxxx" below with your project's access_key and access_secret.
+        #Replace "xxxxxxxx" below with your project's host, access_key and access_secret.
+        'host':'XXXXXXXX',
+        'access_key':'XXXXXXXX', 
         'access_secret':'XXXXXXXX',
         'timeout':10 # seconds
     }
