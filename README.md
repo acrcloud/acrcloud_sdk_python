@@ -5,7 +5,7 @@
 >>>>Video: mp4, mkv, wmv, flv, ts, avi ...
 
 # ACRCloud
-Docs: [https://docs.acrcloud.com/](https://docs.acrcloud.com/)<br>
+Docs: [https://www.acrcloud.com/docs/](https://www.acrcloud.com/docs/)<br>
 Console: [https://console.acrcloud.com/](https://console.acrcloud.com/)
 
 # Windows Runtime Library 
