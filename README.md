@@ -1,6 +1,6 @@
 # Overview
   [ACRCloud](https://www.acrcloud.com/) provides cloud ACR services to help excellent companies and developers build Audio Fingerprinting based applications such as **Audio Recognition** (supports music, video, ads for both online and offline), **Broadcast Monitoring**, **Second Screen Interaction**, **Copyright Detection** and etc.<br>
-  This java SDK can recognize ACRCloud by most of audio/video file. create "ACRCloud Fingerprint" by Audio/Video file, and use "ACRCloud Fingerprint" to recognize metainfos by "ACRCloud webapi".<br>
+  This python SDK can recognize ACRCloud by most of audio/video file. create "ACRCloud Fingerprint" by Audio/Video file, and use "ACRCloud Fingerprint" to recognize metainfos by "ACRCloud webapi".<br>
 >>>>Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...<br>
 >>>>Video: mp4, mkv, wmv, flv, ts, avi ...
 
