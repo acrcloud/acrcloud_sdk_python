@@ -35,12 +35,12 @@ Example:
     }
     re = ACRCloudRecognizer(config)
 
-    #recognize by file path, and skip 180 seconds from from the beginning of "aa.mp3".
-    print re.recognize_by_file('aa.mp3', 180)
+    #recognize by file path, and skip 0 seconds from from the beginning of "aa.mp3".
+    print re.recognize_by_file('aa.mp3', 0)
 
     buf = open('aa.mp3', 'rb').read()
-    #recognize by file_audio_buffer that read from file path, and skip 180 seconds from from the beginning of "aa.mp3".
-    print re.recognize_by_filebuffer(buf, 180)
+    #recognize by file_audio_buffer that read from file path, and skip 0 seconds from from the beginning of "aa.mp3".
+    print re.recognize_by_filebuffer(buf, 0)
 
     #aa.wav is (RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz)
     buf = open('aa.wav', 'rb').read()
@@ -174,6 +174,6 @@ if __name__ == '__main__':
     buft = buf[1024000:192000+1024001]
 
     print acrcloud_extr_tool.__doc__
-    #print re.recognize_by_file(sys.argv[1], 180)
+    #print re.recognize_by_file(sys.argv[1], 0)
     #print re.recognize_by_filebuffer(buf, 80)
     #print re.recognize(buft)
