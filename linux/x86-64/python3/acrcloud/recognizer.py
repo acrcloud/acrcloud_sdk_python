@@ -13,9 +13,11 @@ import hmac
 import time
 import base64
 import hashlib
-import urllib2
+#import urllib2
+import urllib.request
+import urllib.parse
 import datetime
-import mimetools
+#import mimetools
 
 import acrcloud_extr_tool
 
@@ -35,12 +37,12 @@ Example:
     }
     re = ACRCloudRecognizer(config)
 
-    #recognize by file path, and skip 0 seconds from from the beginning of "aa.mp3".
-    print re.recognize_by_file('aa.mp3', 0)
+    #recognize by file path, and skip 180 seconds from from the beginning of "aa.mp3".
+    print re.recognize_by_file('aa.mp3', 180)
 
     buf = open('aa.mp3', 'rb').read()
-    #recognize by file_audio_buffer that read from file path, and skip 0 seconds from from the beginning of "aa.mp3".
-    print re.recognize_by_filebuffer(buf, 0)
+    #recognize by file_audio_buffer that read from file path, and skip 180 seconds from from the beginning of "aa.mp3".
+    print re.recognize_by_filebuffer(buf, 180)
 
     #aa.wav is (RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz)
     buf = open('aa.wav', 'rb').read()
@@ -59,7 +61,7 @@ class ACRCloudRecognizer:
         self.timeout = config.get('timeout', 5)
         self.debug = config.get('debug', False)
         if not self.access_key or not self.access_secret:
-            print 'recognize init(none access_key or access_secret)'
+            print('recognize init(none access_key or access_secret)')
             sys.exit(1)
 
         if self.debug:
@@ -67,43 +69,47 @@ class ACRCloudRecognizer:
 
     def post_multipart(self, url, fields, files, timeout):
         content_type, body = self.encode_multipart_formdata(fields, files)
+        
         if not content_type and not body:
-            self.dlog.logger.error('encode_multipart_formdata error')
+            print('encode_multipart_formdata error')
             return None
         try:
-            req = urllib2.Request(url, data=body)
+            req = urllib.request.Request(url, data=body)
             req.add_header('Content-Type', content_type)
             req.add_header('Referer', url)
-            resp = urllib2.urlopen(req, timeout=timeout)
-            ares = resp.read()
+            resp = urllib.request.urlopen(req, timeout=timeout)
+            ares = resp.read().decode('utf8')
             return ares
-        except Exception, e:
-            print 'post_multipart error'
+        except Exception as e:
+            print('post_multipart error ' + str(e))
         return None
         
     def encode_multipart_formdata(self, fields, files):
         try:
-            boundary = mimetools.choose_boundary()
+            boundary = "*****2016.05.27.acrcloud.rec.copyright." + str(time.time()) + "*****"
+            body = b''
             CRLF = '\r\n'
             L = []
-            for (key, value) in fields.items():
+            for (key, value) in list(fields.items()):
                 L.append('--' + boundary)
                 L.append('Content-Disposition: form-data; name="%s"' % key)
                 L.append('')
-                L.append(str(value))
-            for (key, value) in files.items():
-                L.append('--' + boundary)
+                L.append(value)
+
+            body = CRLF.join(L).encode('ascii')
+
+            for (key, value) in list(files.items()):
+                L = []
+                L.append(CRLF + '--' + boundary)
                 L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, key))
                 L.append('Content-Type: application/octet-stream')
-                L.append('')
-                L.append(value)
-            L.append('--' + boundary + '--')
-            L.append('')
-            body = CRLF.join(L)
+                L.append(CRLF)
+                body = body + CRLF.join(L).encode('ascii') + value
+            body = body + (CRLF + '--' + boundary + '--' + CRLF + CRLF).encode('ascii')
             content_type = 'multipart/form-data; boundary=%s' % boundary
             return content_type, body
-        except Exception, e:
-            print 'encode_multipart_formdata error' + str(e)
+        except Exception as e:
+            print('encode_multipart_formdata error' + str(e))
         return None, None
 
     def do_recogize(self, host, query_data, query_type, access_key, access_secret, timeout=5):
@@ -115,7 +121,8 @@ class ACRCloudRecognizer:
         sample_bytes = str(len(query_data))
         
         string_to_sign = http_method+"\n"+http_url_file+"\n"+access_key+"\n"+data_type+"\n"+signature_version+"\n"+str(timestamp)
-        sign = base64.b64encode(hmac.new(str(access_secret), str(string_to_sign), digestmod=hashlib.sha1).digest())
+        hmac_res = hmac.new(access_secret.encode('ascii'), string_to_sign.encode('ascii'), digestmod=hashlib.sha1).digest()
+        sign = base64.b64encode(hmac_res).decode('ascii')
     
         fields = {'access_key':access_key, 
                   'sample_bytes':sample_bytes, 
@@ -123,7 +130,7 @@ class ACRCloudRecognizer:
                   'signature':sign, 
                   'data_type':data_type, 
                   "signature_version":signature_version}
-        
+
         server_url = 'http://' + host + http_url_file
         res = self.post_multipart(server_url, fields, {"sample" : query_data}, timeout)
         return res
@@ -132,11 +139,9 @@ class ACRCloudRecognizer:
         try:
             res = ''
             fp = acrcloud_extr_tool.create_fingerprint(wav_audio_buffer, False)
-            if not fp:
-                return res
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
         except Exception as e:
-            print 'recognize error ' + str(e)
+            print('recognize error ' + str(e))
         return res
 
     def recognize_by_file(self, file_path, start_seconds):
@@ -147,18 +152,16 @@ class ACRCloudRecognizer:
                 return res
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
         except Exception as e:
-            print 'recognize error ' + str(e)
+            print('recognize error ' + str(e))
         return res
 
     def recognize_by_filebuffer(self, file_buffer, start_seconds):
         try:
             res = ''
             fp = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, 12, False)
-            if not fp:
-                return res
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
         except Exception as e:
-            print 'recognize error ' + str(e)
+            print('recognize error ' + str(e))
         return res
 
 if __name__ == '__main__':
@@ -168,12 +171,14 @@ if __name__ == '__main__':
         'access_secret':'XXXXXXXX',
         'timeout':5
     }
+
     
     re = ACRCloudRecognizer(config)
     buf = open(sys.argv[1], 'rb').read()
-    buft = buf[1024000:192000+1024001]
+    #buft = buf[1024000:192000+1024001]
 
-    print acrcloud_extr_tool.__doc__
-    #print re.recognize_by_file(sys.argv[1], 0)
-    #print re.recognize_by_filebuffer(buf, 80)
+    acrcloud_extr_tool.set_debug()
+    #print(acrcloud_extr_tool.__doc__)
+    #print(re.recognize_by_file(sys.argv[1], 10))
+    print(re.recognize_by_filebuffer(buf, 10))
     #print re.recognize(buft)
