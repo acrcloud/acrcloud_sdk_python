@@ -9,7 +9,7 @@
 >>Video: mp4, mkv, wmv, flv, ts, avi ...
 
 ## Requirements
-Follow the tutorials to create a project and get your host, access_key and access_secret.
+Follow one of the tutorials to create a project and get your host, access_key and access_secret.
 
  * [How to identify songs by sound](https://www.acrcloud.com/docs/tutorials/identify-music-by-sound/)
  
