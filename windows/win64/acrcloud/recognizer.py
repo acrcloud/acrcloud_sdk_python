@@ -198,7 +198,7 @@ class ACRCloudStatusCode:
         HTTP_ERROR_CODE : 'http error', 
         NO_RESULT_CODE : 'no result', 
         AUDIO_ERROR_CODE : 'audio error', 
-        UNKNOW_ERROR_CODE : 'unknow error'
+        UNKNOW_ERROR_CODE : 'unknow error',
         JSON_ERROR_CODE : 'json error'
     }
 
