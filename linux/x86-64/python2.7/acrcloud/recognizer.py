@@ -137,6 +137,10 @@ class ACRCloudRecognizer:
             elif len(fp) <= 0:
                 return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
+            try:
+                json.loads(res)
+            except Exception as e:
+                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
         except Exception as e:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
@@ -150,6 +154,10 @@ class ACRCloudRecognizer:
             elif len(fp) <= 0:
                 return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
+            try:
+                json.loads(res)
+            except Exception as e:
+                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
         except Exception as e:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
@@ -163,6 +171,10 @@ class ACRCloudRecognizer:
             elif len(fp) <= 0:
                 return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
+            try:
+                json.loads(res)
+            except Exception as e:
+                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
         except Exception as e:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
@@ -180,12 +192,14 @@ class ACRCloudStatusCode:
     NO_RESULT_CODE = 1001
     AUDIO_ERROR_CODE = 2005
     UNKNOW_ERROR_CODE = 2010
+    JSON_ERROR_CODE = 2002
 
     CODE_MSG = {
         HTTP_ERROR_CODE : 'http error', 
         NO_RESULT_CODE : 'no result', 
         AUDIO_ERROR_CODE : 'audio error', 
         UNKNOW_ERROR_CODE : 'unknow error'
+        JSON_ERROR_CODE : 'json error'
     }
 
     @staticmethod
