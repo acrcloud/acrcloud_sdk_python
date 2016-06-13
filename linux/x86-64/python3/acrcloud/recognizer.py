@@ -11,13 +11,12 @@ import os
 import sys
 import hmac
 import time
+import json
 import base64
 import hashlib
-#import urllib2
 import urllib.request
 import urllib.parse
 import datetime
-#import mimetools
 
 import acrcloud_extr_tool
 
@@ -71,8 +70,8 @@ class ACRCloudRecognizer:
         content_type, body = self.encode_multipart_formdata(fields, files)
         
         if not content_type and not body:
-            print('encode_multipart_formdata error')
-            return None
+            return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.HTTP_ERROR_CODE, 'encode_multipart_formdata error')
+
         try:
             req = urllib.request.Request(url, data=body)
             req.add_header('Content-Type', content_type)
@@ -81,8 +80,7 @@ class ACRCloudRecognizer:
             ares = resp.read().decode('utf8')
             return ares
         except Exception as e:
-            print('post_multipart error ' + str(e))
-        return None
+            return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.HTTP_ERROR_CODE, str(e))
         
     def encode_multipart_formdata(self, fields, files):
         try:
@@ -139,30 +137,85 @@ class ACRCloudRecognizer:
         try:
             res = ''
             fp = acrcloud_extr_tool.create_fingerprint(wav_audio_buffer, False)
+            if fp == None:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
+            elif len(fp) <= 0:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
+            try:
+                json.loads(res)
+            except Exception as e:
+                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
         except Exception as e:
-            print('recognize error ' + str(e))
+            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
     def recognize_by_file(self, file_path, start_seconds):
         try:
             res = ''
             fp = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, 12, False)
-            if not fp:
-                return res
+            if fp == None:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
+            elif len(fp) <= 0:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
+            try:
+                json.loads(res)
+            except Exception as e:
+                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
         except Exception as e:
-            print('recognize error ' + str(e))
+            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
     def recognize_by_filebuffer(self, file_buffer, start_seconds):
         try:
             res = ''
             fp = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, 12, False)
+            if fp == None:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
+            elif len(fp) <= 0:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
             res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
+            try:
+                json.loads(res)
+            except Exception as e:
+                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
         except Exception as e:
-            print('recognize error ' + str(e))
+            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
+
+    @staticmethod
+    def get_duration_ms_by_file(file_path):
+        try:
+            duration_ms = acrcloud_extr_tool.get_duration_ms_by_file(file_path)
+            return duration_ms
+        except Exception as e:
+            return 0
+
+class ACRCloudStatusCode:
+    HTTP_ERROR_CODE = 3000
+    NO_RESULT_CODE = 1001
+    AUDIO_ERROR_CODE = 2005
+    UNKNOW_ERROR_CODE = 2010
+    JSON_ERROR_CODE = 2002
+
+    CODE_MSG = { 
+        HTTP_ERROR_CODE : 'http error', 
+        NO_RESULT_CODE : 'no result', 
+        AUDIO_ERROR_CODE : 'audio error', 
+        UNKNOW_ERROR_CODE : 'unknow error',
+        JSON_ERROR_CODE : 'json error'
+    }   
+
+    @staticmethod
+    def get_result_error(res_code, msg=''):
+        if ACRCloudStatusCode.CODE_MSG.get(res_code) == None:
+            return None
+        res = {'status':{'msg':ACRCloudStatusCode.CODE_MSG[res_code], 'code':res_code}}
+        if msg:
+            res = {'status':{'msg':ACRCloudStatusCode.CODE_MSG[res_code]+':'+msg, 'code':res_code}}
+        return json.dumps(res)
+
 
 if __name__ == '__main__':
     config = {
