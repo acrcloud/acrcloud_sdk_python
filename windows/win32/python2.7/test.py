@@ -8,7 +8,7 @@ from acrcloud.recognizer import ACRCloudRecognizer
 
 if __name__ == '__main__':
     config = {
-        'host':'ap-southeast-1.api.acrcloud.com',
+        'host':'XXXXXXXX',
         'access_key':'XXXXXXXX',
         'access_secret':'XXXXXXXX',
         'timeout':10 # seconds
