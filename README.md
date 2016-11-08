@@ -14,7 +14,10 @@ Follow one of the tutorials to create a project and get your host, access_key an
  * [How to identify songs by sound](https://www.acrcloud.com/docs/tutorials/identify-music-by-sound/)
  
  * [How to detect custom audio content by sound](https://www.acrcloud.com/docs/tutorials/identify-audio-custom-content/)
- 
+
+## Install
+sudo python setup.py install
+
 ## Windows Runtime Library 
 **If you run the SDK on Windows, you must install this library.**<br>
 X86: [download and install Library(windows/vcredist_x86.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=5555)<br>
