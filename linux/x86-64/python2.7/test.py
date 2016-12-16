@@ -29,9 +29,3 @@ if __name__ == '__main__':
     #recognize by file_audio_buffer that read from file path, and skip 0 seconds from from the beginning of sys.argv[1].
     print re.recognize_by_filebuffer(buf, 0)
 
-    #aa.wav must be (RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz)
-    #buf = open('aa.wav', 'rb').read()
-    #buft = buf[1024000:192000+1024001]
-    #recognize by audio_buffer(RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz)
-    #print re.recognize(buft)
-
