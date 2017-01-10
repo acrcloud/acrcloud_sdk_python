@@ -150,10 +150,10 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_file(self, file_path, start_seconds):
+    def recognize_by_file(self, file_path, start_seconds, rec_length=12):
         try:
             res = ''
-            fp = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, 12, False)
+            fp = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False)
             if fp == None:
                 return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
             elif len(fp) <= 0:
@@ -167,10 +167,10 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_filebuffer(self, file_buffer, start_seconds):
+    def recognize_by_filebuffer(self, file_buffer, start_seconds, rec_length=12):
         try:
             res = ''
-            fp = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, 12, False)
+            fp = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, False)
             if fp == None:
                 return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
             elif len(fp) <= 0:
