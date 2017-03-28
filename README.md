@@ -25,7 +25,7 @@ x64: [download and install Library(windows/vcredist_x64.exe)](https://www.micros
 
 ## Note
 1. If you run the SDK on Windows, you must install library(vcredist).
-2. Only linux python2.7 supports humming.
+2. ALL version supports humming.
 
 ## Functions
 Introduction all API.
