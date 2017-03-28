@@ -32,14 +32,16 @@ Introduction all API.
 ### recognizer.py
 ```python
 class ACRCloudRecognizer:
-    def recognize_by_file(self, file_path, start_seconds):
+    def recognize_by_file(self, file_path, start_seconds, rec_length=10):
       #@param file_path : query file path
       #@param start_seconds : skip (start_seconds) seconds from from the beginning of (filePath)
+      #@param rec_length: use rec_length seconds data to recongize
       #@return result metainfos
       
-    def recognize_by_filebuffer(self, file_buffer, start_seconds):
+    def recognize_by_filebuffer(self, file_buffer, start_seconds, rec_length=10):
       #@param file_buffer : file_path query buffer
       #@param start_seconds : skip (start_seconds) seconds from from the beginning of (filePath)
+      #@param rec_length: use rec_length seconds data to recongize
       #@return result metainfos
       
     def recognize(self, wav_audio_buffer):
