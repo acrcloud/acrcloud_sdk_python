@@ -56,15 +56,28 @@ def create_fingerprint_by_file(file_name, start_time_seconds, audio_len_seconds,
       #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
       #is_db_fingerprint: If it is True, it will create db frigerprint (Fingerprint for bucket, not for recognition); 
 
+def create_humming_fingerprint_by_file(file_name, start_time_seconds, audio_len_seconds):
+      #file_name: Path of input file; 
+      #start_time_seconds: Start time of input file, default is 0; 
+      #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
+
 def create_fingerprint_by_filebuffer(data_buffer, start_time_seconds, audio_len_seconds, is_db_fingerprint):
       #data_buffer: data buffer of input file; 
       #start_time_seconds: Start time of input file, default is 0; 
       #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
       #is_db_fingerprint: If it is True, it will create db frigerprint (Fingerprint for bucket, not for recognition); 
 
+def create_humming_fingerprint_by_filebuffer(data_buffer, start_time_seconds, audio_len_seconds):
+      #data_buffer: data buffer of input file; 
+      #start_time_seconds: Start time of input file, default is 0; 
+      #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
+
 def create_fingerprint(data_buffer, is_db_fingerprint):
       #data_buffer: audio data buffer(RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz); 
       #is_db_fingerprint: If it is True, it will create db frigerprint (Fingerprint for bucket, not for recognition); 
+
+def create_humming_fingerprint(data_buffer):
+      #data_buffer: audio data buffer(RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz); 
 
 def decode_audio_by_file(file_name, start_time_seconds, audio_len_seconds):
       #It will return the audio data(RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz); 
