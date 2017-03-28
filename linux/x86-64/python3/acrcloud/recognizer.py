@@ -150,7 +150,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_file(self, file_path, start_seconds, rec_length=12):
+    def recognize_by_file(self, file_path, start_seconds, rec_length=10):
         try:
             res = ''
             fp = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False)
@@ -167,7 +167,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_filebuffer(self, file_buffer, start_seconds, rec_length=12):
+    def recognize_by_filebuffer(self, file_buffer, start_seconds, rec_length=10):
         try:
             res = ''
             fp = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, False)
