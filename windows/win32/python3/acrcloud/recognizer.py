@@ -225,16 +225,16 @@ class ACRCloudRecognizer:
 class ACRCloudStatusCode:
     HTTP_ERROR_CODE = 3000
     NO_RESULT_CODE = 1001
-    AUDIO_ERROR_CODE = 2005
+    AUDIO_ERROR_CODE = 2004
     UNKNOW_ERROR_CODE = 2010
     JSON_ERROR_CODE = 2002
 
     CODE_MSG = { 
-        HTTP_ERROR_CODE : 'http error', 
-        NO_RESULT_CODE : 'no result', 
-        AUDIO_ERROR_CODE : 'audio error', 
-        UNKNOW_ERROR_CODE : 'unknow error',
-        JSON_ERROR_CODE : 'json error'
+        HTTP_ERROR_CODE : 'Http Error', 
+        NO_RESULT_CODE : 'No Result', 
+        AUDIO_ERROR_CODE : 'Unable to generate fingerprint', 
+        UNKNOW_ERROR_CODE : 'Unknow Error',
+        JSON_ERROR_CODE : 'Json Error'
     }   
 
     @staticmethod
