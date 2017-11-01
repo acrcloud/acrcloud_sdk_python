@@ -16,7 +16,8 @@ Follow one of the tutorials to create a project and get your host, access_key an
  * [How to detect custom audio content by sound](https://www.acrcloud.com/docs/tutorials/identify-audio-custom-content/)
 
 ## Install
-sudo python setup.py install
+You can run "python -m pip install git+https://github.com/christensonb/acrcloud_sdk_python"
+or go to child dir, and run"sudo python setup.py install"
 
 ## Windows Runtime Library 
 **If you run the SDK on Windows, you must install this library.**<br>
