@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 setup(
     name="pyacrcloud",
-    version="1.0.0",
+    version="1.0.2",
     packages=find_packages(),
 
     package_data={
@@ -18,5 +18,10 @@ setup(
     keywords="ACRCLoud Python SDK",
     url='https://github.com/acrcloud/acrcloud_sdk_python',
     zip_safe=False,
+    classifiers=[
+        'Operating System :: POSIX',
+        'Programming Language :: Python :: 2',
+    ]
+
     # could also include long_description, download_url, classifiers, etc.
 )
