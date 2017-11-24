@@ -10,7 +10,9 @@ setup(
         '': ['*.txt', '*.rst'],
         'acrcloud': ['*.so', '*.pyd'],
     },
-
+    install_requires=[
+        'async_timeout',
+    ],
     author="ACRCloud",
     author_email="support@acrcloud.com",
     description='Python wrapper for acrcloud libraries',
