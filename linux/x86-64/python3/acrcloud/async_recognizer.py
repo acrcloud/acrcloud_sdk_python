@@ -1,1 +1,1 @@
-/Users/bchristenson/xperi/acrcloud_sdk_python/mac/x86-64/python3/acrcloud/async_recognizer.py
+../../../../mac/x86-64/python3/acrcloud/async_recognizer.py
