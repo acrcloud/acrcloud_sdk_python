@@ -78,19 +78,17 @@ class ACRCloudRecognizer:
         content_type, body = self.encode_multipart_formdata(fields, files)
 
         if not content_type and not body:
-            return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.HTTP_ERROR_CODE,
-                                                       'encode_multipart_formdata error')
+            return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.HTTP_ERROR_CODE, 'encode_multipart_formdata error')
 
         try:
             headers = {'Content-Type': content_type, 'Referer': url}
             with async_timeout.timeout(timeout):
-                async with await aiohttp.request('POST', url, data=body, loop=self.loop,
-                                             headers=headers) as response:
+                async with await aiohttp.request('POST', url, data=body, loop=self.loop, headers=headers) as response:
                     text = await response.read()
                     return text.decode('utf8')
         except Exception as e:
             return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.HTTP_ERROR_CODE, str(e))
-
+        
     def encode_multipart_formdata(self, fields, files):
         try:
             boundary = "*****2016.05.27.acrcloud.rec.copyright." + str(time.time()) + "*****"
@@ -126,16 +124,16 @@ class ACRCloudRecognizer:
         signature_version = "1"
         timestamp = int(time.mktime(datetime.datetime.utcfromtimestamp(time.time()).timetuple()))
         sample_bytes = str(len(query_data))
-
+        
         string_to_sign = http_method+"\n"+http_url_file+"\n"+access_key+"\n"+data_type+"\n"+signature_version+"\n"+str(timestamp)
         hmac_res = hmac.new(access_secret.encode('ascii'), string_to_sign.encode('ascii'), digestmod=hashlib.sha1).digest()
         sign = base64.b64encode(hmac_res).decode('ascii')
-
-        fields = {'access_key':access_key,
-                  'sample_bytes':sample_bytes,
-                  'timestamp':str(timestamp),
-                  'signature':sign,
-                  'data_type':data_type,
+    
+        fields = {'access_key':access_key, 
+                  'sample_bytes':sample_bytes, 
+                  'timestamp':str(timestamp), 
+                  'signature':sign, 
+                  'data_type':data_type, 
                   "signature_version":signature_version}
 
         sample_bytes = 0
@@ -169,8 +167,7 @@ class ACRCloudRecognizer:
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint(wav_audio_buffer)
 
-            res = await self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret,
-                                   self.timeout)
+            res = await self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
             try:
                 json.loads(res)
             except Exception as e:
@@ -184,8 +181,7 @@ class ACRCloudRecognizer:
         try:
             query_data = {}
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_file(
-                    file_path, start_seconds, rec_length, False)
+                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False)
 
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path,
@@ -207,16 +203,12 @@ class ACRCloudRecognizer:
         try:
             query_data = {}
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds,
-                                                                                           rec_length, False)
+                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, False)
 
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer,
-                                                                                                       start_seconds,
-                                                                                                       rec_length)
+                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
 
-            res = await self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret,
-                                   self.timeout)
+            res = await self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
             try:
                 json.loads(res)
             except Exception as e:
@@ -240,10 +232,10 @@ class ACRCloudStatusCode:
     UNKNOW_ERROR_CODE = 2010
     JSON_ERROR_CODE = 2002
 
-    CODE_MSG = {
-        HTTP_ERROR_CODE : 'Http Error',
-        NO_RESULT_CODE : 'No Result',
-        AUDIO_ERROR_CODE : 'Unable to generate fingerprint',
+    CODE_MSG = { 
+        HTTP_ERROR_CODE : 'Http Error', 
+        NO_RESULT_CODE : 'No Result', 
+        AUDIO_ERROR_CODE : 'Unable to generate fingerprint', 
         UNKNOW_ERROR_CODE : 'Unknown Error',
         JSON_ERROR_CODE : 'Json Error'
     }
@@ -266,7 +258,7 @@ if __name__ == '__main__':
         'timeout':5
     }
 
-
+    
     re = ACRCloudRecognizer(config)
     buf = open(sys.argv[1], 'rb').read()
     #buft = buf[1024000:192000+1024001]
