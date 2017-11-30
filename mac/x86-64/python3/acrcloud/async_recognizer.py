@@ -17,6 +17,7 @@ import hashlib
 import aiohttp
 import async_timeout
 import datetime
+import asyncio
 
 import acrcloud_extr_tool
 
@@ -55,8 +56,8 @@ class ACRCloudRecognizeType:
     ACR_OPT_REC_BOTH = 2 # audio and humming fingerprint
 
 class ACRCloudRecognizer:
-    def __init__(self, config, loop):
-        self.loop = loop
+    def __init__(self, config, loop=None):
+        self.loop = loop if loop is not None else asyncio.get_event_loop()
         self.config = config
         self.host = config.get('host', 'ap-southeast-1.api.acrcloud.com')
         self.query_type = config.get('query_type', 'fingerprint')
