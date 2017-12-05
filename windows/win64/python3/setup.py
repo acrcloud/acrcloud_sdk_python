@@ -20,10 +20,5 @@ setup(
     keywords="ACRCLoud Python SDK",
     url='https://github.com/acrcloud/acrcloud_sdk_python',
     zip_safe=False,
-    classifiers=[
-        'Operating System :: Microsoft',
-        'Programming Language :: Python :: 3',
-    ]
-
     # could also include long_description, download_url, classifiers, etc.
 )

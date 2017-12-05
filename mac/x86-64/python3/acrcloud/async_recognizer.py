@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 #-*- coding:utf-8 -*-
 
-'''
-    @author qinxue.pan E-mail: xue@acrcloud.com
-    @version 1.0.0
-    @create 2015.10.01
-'''
-
 import os
 import sys
 import hmac
