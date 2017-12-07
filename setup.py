@@ -24,7 +24,7 @@ else:
 
 setup(
     name="pyacrcloud",
-    version="1.0.3",
+    version="1.0.0.post1",
     packages=find_packages(package_path),
     package_dir={"": package_path},
 
