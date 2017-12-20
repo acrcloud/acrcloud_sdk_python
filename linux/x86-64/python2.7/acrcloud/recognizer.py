@@ -171,7 +171,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_file(self, file_path, start_seconds=0, rec_length=10, filter_e=0):
+    def recognize_by_file(self, file_path, start_seconds=0, rec_length=10, filter_e=50):
         res = ''
         try:
             query_data = {}
