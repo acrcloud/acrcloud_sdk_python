@@ -3,16 +3,15 @@ from os import path
 
 from setuptools import setup, find_packages
 
-package_path = '.'
 
 if sys.platform == "darwin":  # mac
-    package_path = path.join(package_path, "mac", "x86-64")
-elif sys.platform != "win":  # linux
-    package_path = path.join(package_path, "linux", "x86-64")
+    package_path = path.join("mac", "x86-64")
+elif sys.platform == "linux":  # linux
+    package_path = path.join("linux", "x86-64")
 elif sys.maxsize > 2 ** 32:  # 64 bit windows
-    package_path = path.join(package_path, "windows", "win64")
+    package_path = path.join("windows", "win64")
 else:  # 32 bit windows
-    package_path = path.join(package_path, "windows", "win32")
+    package_path = path.join("windows", "win32")
 
 if sys.version[0] == '3':
     package_path = path.join(package_path, 'python3')
