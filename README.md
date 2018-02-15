@@ -27,6 +27,7 @@ x64: [download and install Library(windows/vcredist_x64.exe)](https://www.micros
 ## Note
 1. If you run the SDK on Windows, you must install library(vcredist).
 2. ALL version supports humming.
+3. If you use docker alpine, you need to install "apk add --update libstdc++"
 
 ## Functions
 Introduction all API.
