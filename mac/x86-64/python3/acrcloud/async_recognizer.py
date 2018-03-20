@@ -50,8 +50,11 @@ class ACRCloudRecognizeType:
     ACR_OPT_REC_BOTH = 2 # audio and humming fingerprint
 
 class ACRCloudRecognizer:
-    def __init__(self, config, loop=None):
+    def __init__(self, config, session=None, loop=None):
         self.loop = loop if loop is not None else asyncio.get_event_loop()
+        self._close_session = session is None
+        self.session = self.session = session if session is not None else \
+            aiohttp.ClientSession(loop=self.loop)
         self.config = config
         self.host = config.get('host', 'ap-southeast-1.api.acrcloud.com')
         self.query_type = config.get('query_type', 'fingerprint')
@@ -69,6 +72,16 @@ class ACRCloudRecognizer:
         if self.debug:
             acrcloud_extr_tool.set_debug()
 
+    async def __aenter__(self):
+        return self
+
+    async def close(self):
+        if self._close_session:
+            await self.session.close()
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
+
     async def post_multipart(self, url, fields, files, timeout):
         content_type, body = self.encode_multipart_formdata(fields, files)
 
@@ -78,7 +91,7 @@ class ACRCloudRecognizer:
         try:
             headers = {'Content-Type': content_type, 'Referer': url}
             with async_timeout.timeout(timeout):
-                async with await aiohttp.request('POST', url, data=body, loop=self.loop, headers=headers) as response:
+                async with await self.session.request('POST', url, data=body, loop=self.loop, headers=headers) as response:
                     text = await response.read()
                     return text.decode('utf8')
         except Exception as e:
