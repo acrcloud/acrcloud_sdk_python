@@ -91,7 +91,7 @@ class ACRCloudRecognizer:
         try:
             headers = {'Content-Type': content_type, 'Referer': url}
             with async_timeout.timeout(timeout):
-                async with await self.session.request('POST', url, data=body, loop=self.loop, headers=headers) as response:
+                async with await self.session.request('POST', url, data=body, headers=headers) as response:
                     text = await response.read()
                     return text.decode('utf8')
         except Exception as e:
