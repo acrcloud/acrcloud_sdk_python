@@ -53,8 +53,9 @@ class ACRCloudRecognizer:
     def __init__(self, config, session=None, loop=None):
         self.loop = loop if loop is not None else asyncio.get_event_loop()
         self._close_session = session is None
-        self.session = self.session = session if session is not None else \
-            aiohttp.ClientSession(loop=self.loop)
+        self.session = session
+        if self.session is None:
+            self.session = aiohttp.ClientSession(loop=self.loop)
         self.config = config
         self.host = config.get('host', 'ap-southeast-1.api.acrcloud.com')
         self.query_type = config.get('query_type', 'fingerprint')
