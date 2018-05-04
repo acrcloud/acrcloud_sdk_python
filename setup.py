@@ -7,7 +7,7 @@ package_path = '.'
 
 if sys.platform == "darwin":  # mac
     package_path = path.join(package_path, "mac", "x86-64")
-elif sys.platform != "win":  # linux
+elif not sys.platform.startswith('win'):  # linux
     package_path = path.join(package_path, "linux", "x86-64")
 elif sys.maxsize > 2 ** 32:  # 64 bit windows
     package_path = path.join(package_path, "windows", "win64")
