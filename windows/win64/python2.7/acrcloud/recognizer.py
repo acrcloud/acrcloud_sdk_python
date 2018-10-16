@@ -176,7 +176,7 @@ class ACRCloudRecognizer:
         try:
             query_data = {}
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False, filter_e)
+                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False)
 
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path, start_seconds, rec_length)
