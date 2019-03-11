@@ -52,11 +52,12 @@ class ACRCloudRecognizer:
 ```
 ### Module acrcloud_extr_tool
 ```python
-def create_fingerprint_by_file(file_name, start_time_seconds, audio_len_seconds, is_db_fingerprint):
+def create_fingerprint_by_file(file_name, start_time_seconds, audio_len_seconds, is_db_fingerprint, filter_e):
       #file_name: Path of input file; 
       #start_time_seconds: Start time of input file, default is 0; 
       #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
       #is_db_fingerprint: If it is True, it will create db frigerprint (Fingerprint for bucket, not for recognition); 
+      #filter_e: Set it 0; 
 
 def create_humming_fingerprint_by_file(file_name, start_time_seconds, audio_len_seconds):
       #file_name: Path of input file; 
