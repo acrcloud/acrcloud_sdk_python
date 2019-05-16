@@ -17,15 +17,15 @@ import hashlib
 import urllib.request
 import urllib.parse
 import datetime
+from ctypes import *
 
-import acrcloud_extr_tool
+#import acrcloud_extr_tool
+acrcloud_extr_tool = cdll.LoadLibrary(os.path.split(os.path.realpath(__file__))[0] + '/libacrcloud_extr_tool.so')
 
 '''
 Copyright 2015 ACRCloud Recognizer v1.0.0
-
 This module can recognize ACRCloud by most of audio/video file. 
-        Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...
-        Video: mp4, mkv, wmv, flv, ts, avi ...
+        Audio: RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz
 
 Example:
     config = {
@@ -34,25 +34,12 @@ Example:
         'access_secret':'XXXXXXXX',
         'timeout':5
     }
-    re = ACRCloudRecognizer(config)
-
-    #recognize by file path, and skip 180 seconds from from the beginning of "aa.mp3".
-    print re.recognize_by_file('aa.mp3', 180)
-
-    buf = open('aa.mp3', 'rb').read()
-    #recognize by file_audio_buffer that read from file path, and skip 180 seconds from from the beginning of "aa.mp3".
-    print re.recognize_by_filebuffer(buf, 180)
-
     #aa.wav is (RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz)
     buf = open('aa.wav', 'rb').read()
     buft = buf[1024000:192000+1024001]
     recognize by audio_buffer(RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz)
     print re.recognize(buft)
 '''
-class ACRCloudRecognizeType:
-    ACR_OPT_REC_AUDIO = 0  # audio fingerprint
-    ACR_OPT_REC_HUMMING = 1 # humming fingerprint
-    ACR_OPT_REC_BOTH = 2 # audio and humming fingerprint
 
 class ACRCloudRecognizer:
     def __init__(self, config):
@@ -62,9 +49,6 @@ class ACRCloudRecognizer:
         self.access_key = config.get('access_key')
         self.access_secret = config.get('access_secret')
         self.timeout = config.get('timeout', 5)
-        self.recognize_type = config.get('recognize_type', ACRCloudRecognizeType.ACR_OPT_REC_AUDIO)
-        if self.recognize_type > 2 or self.recognize_type < 0:
-            self.recognize_type = ACRCloudRecognizeType.ACR_OPT_REC_AUDIO
         self.debug = config.get('debug', False)
         if not self.access_key or not self.access_secret:
             print('recognize init(none access_key or access_secret)')
@@ -136,38 +120,20 @@ class ACRCloudRecognizer:
                   'data_type':data_type, 
                   "signature_version":signature_version}
 
-        sample_bytes = 0
-        sample_hum_bytes = 0
-        if 'sample' in query_data:
-            if query_data['sample'] == None:
-                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
-            sample_bytes = len(query_data['sample'])
-            fields['sample_bytes'] = str(sample_bytes)
-
-        if 'sample_hum' in query_data:
-            if query_data['sample_hum'] == None:
-                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
-            sample_hum_bytes = len(query_data['sample_hum'])
-            fields['sample_hum_bytes'] = str(sample_hum_bytes)
-
-        if sample_bytes == 0 and sample_hum_bytes == 0:
-            return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
-
         server_url = 'http://' + host + http_url_file
-        res = self.post_multipart(server_url, fields, query_data, timeout)
+        res = self.post_multipart(server_url, fields, {"sample" : query_data}, timeout)
         return res
 
     def recognize(self, wav_audio_buffer):
-        res = ''
         try:
-            query_data = {}
-            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample'] = acrcloud_extr_tool.create_fingerprint(wav_audio_buffer, False)
-
-            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint(wav_audio_buffer)
-
-            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
+            res = ''
+            fp_tmp = c_char_p()
+            fplen = acrcloud_extr_tool.create_fingerprint(wav_audio_buffer, len(wav_audio_buffer), 0, byref(fp_tmp))
+            if fplen <= 0:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.NO_RESULT_CODE)
+            fp = string_at(fp_tmp, fplen)
+            acrcloud_extr_tool.acr_free(fp_tmp)
+            res = self.do_recogize(self.host, fp, self.query_type, self.access_key, self.access_secret, self.timeout)
             try:
                 json.loads(res)
             except Exception as e:
@@ -175,66 +141,20 @@ class ACRCloudRecognizer:
         except Exception as e:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
-    
-    def recognize_by_file(self, file_path, start_seconds, rec_length=10):
-        res = ''
-        try:
-            query_data = {}
-            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False)
-
-            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path, start_seconds, rec_length)
-
-            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
-            try:
-                json.loads(res)
-            except Exception as e:
-                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
-        except Exception as e:
-            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
-        return res
-
-    def recognize_by_filebuffer(self, file_buffer, start_seconds, rec_length=10):
-        res = ''
-        try:
-            query_data = {}
-            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, False)
-
-            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
-
-            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
-            try:
-                json.loads(res)
-            except Exception as e:
-                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
-        except Exception as e:
-            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
-        return res
-
-    @staticmethod
-    def get_duration_ms_by_file(file_path):
-        try:
-            duration_ms = acrcloud_extr_tool.get_duration_ms_by_file(file_path)
-            return duration_ms
-        except Exception as e:
-            return 0
 
 class ACRCloudStatusCode:
     HTTP_ERROR_CODE = 3000
     NO_RESULT_CODE = 1001
-    AUDIO_ERROR_CODE = 2004
+    AUDIO_ERROR_CODE = 2005
     UNKNOW_ERROR_CODE = 2010
     JSON_ERROR_CODE = 2002
 
     CODE_MSG = { 
-        HTTP_ERROR_CODE : 'Http Error', 
-        NO_RESULT_CODE : 'No Result', 
-        AUDIO_ERROR_CODE : 'Unable to generate fingerprint', 
-        UNKNOW_ERROR_CODE : 'Unknow Error',
-        JSON_ERROR_CODE : 'Json Error'
+        HTTP_ERROR_CODE : 'http error', 
+        NO_RESULT_CODE : 'no result', 
+        AUDIO_ERROR_CODE : 'audio error', 
+        UNKNOW_ERROR_CODE : 'unknow error',
+        JSON_ERROR_CODE : 'json error'
     }   
 
     @staticmethod
@@ -260,8 +180,7 @@ if __name__ == '__main__':
     buf = open(sys.argv[1], 'rb').read()
     #buft = buf[1024000:192000+1024001]
 
-    acrcloud_extr_tool.set_debug()
     #print(acrcloud_extr_tool.__doc__)
     #print(re.recognize_by_file(sys.argv[1], 10))
-    print(re.recognize_by_filebuffer(buf, 10))
-    #print re.recognize(buft)
+    #print(re.recognize_by_filebuffer(buf, 10))
+    print(re.recognize(buf))
