@@ -72,7 +72,7 @@ class ACRCloudRecognizer:
             sys.exit(1)
 
         self.filter_energy_min = config.get('filter_energy_min', 100)
-        self.silence_energy_threshold = config.get('silence_energy_threshold', 1200)
+        self.silence_energy_threshold = config.get('silence_energy_threshold', 1000)
         self.silence_rate_threshold = config.get('silence_rate_threshold', 0.7)
 
         if self.debug:
