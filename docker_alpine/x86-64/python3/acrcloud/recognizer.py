@@ -162,7 +162,7 @@ class ACRCloudRecognizer:
         try:
             query_data = {}
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample'] = acrcloud_extr_tool.create_fingerprint(wav_audio_buffer, False)
+                query_data['sample'] = acrcloud_extr_tool.create_fingerprint(wav_audio_buffer, False, 50)
 
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint(wav_audio_buffer)
