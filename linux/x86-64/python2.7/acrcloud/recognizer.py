@@ -181,6 +181,18 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
+    def recognize_audio(self, file_path, start_seconds=0, rec_length=10):
+        res = ''
+        try:
+            query_data = {}
+            query_data['sample'] = acrcloud_extr_tool.decode_audio_by_file(file_path, start_seconds, rec_length)
+            if not query_data['sample'] or len(query_data['sample']) < 16000:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
+            res = self.do_recogize(self.host, query_data, 'audio', self.access_key, self.access_secret, self.timeout)
+        except Exception as e:
+            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
+        return res
+
     def recognize_by_file(self, file_path, start_seconds=0, rec_length=10):
         res = ''
         try:
