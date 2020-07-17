@@ -81,7 +81,6 @@ class ACRCloudRecognizer:
     def post_multipart(self, url, fields, files, timeout):
         content_type, body = self.encode_multipart_formdata(fields, files)
         if not content_type and not body:
-            self.dlog.logger.error('encode_multipart_formdata error')
             return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.HTTP_ERROR_CODE, 'encode_multipart_formdata error')
         try:
             req = urllib2.Request(url, data=body)
