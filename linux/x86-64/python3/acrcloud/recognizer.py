@@ -105,7 +105,7 @@ class ACRCloudRecognizer:
                 L.append('')
                 L.append(value)
 
-            body = CRLF.join(L).encode('ascii')
+            body = bytes(CRLF.join(L), encoding='utf-8')
 
             for (key, value) in list(files.items()):
                 L = []
@@ -121,7 +121,7 @@ class ACRCloudRecognizer:
             print('encode_multipart_formdata error' + str(e))
         return None, None
 
-    def do_recogize(self, host, query_data, query_type, access_key, access_secret, timeout=5):
+    def do_recogize(self, host, query_data, query_type, access_key, access_secret, timeout=5, user_params={}):
         http_method = "POST"
         http_url_file = "/v1/identify"
         data_type = query_type
@@ -139,6 +139,8 @@ class ACRCloudRecognizer:
                   'signature':sign, 
                   'data_type':data_type, 
                   "signature_version":signature_version}
+        for k,v in user_params.items():
+            fields[k] = v
 
         sample_bytes = 0
         sample_hum_bytes = 0
@@ -186,20 +188,20 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_audio(self, file_path, start_seconds=0, rec_length=10):
+    def recognize_audio(self, file_path, start_seconds=0, rec_length=10, user_params={}):
         res = ''
         try:
             query_data = {}
             query_data['sample'] = acrcloud_extr_tool.decode_audio_by_file(file_path, start_seconds, rec_length, 8000)
             if not query_data['sample'] or len(query_data['sample']) < 16000:
                 return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
-            res = self.do_recogize(self.host, query_data, 'audio', self.access_key, self.access_secret, self.timeout)
+            res = self.do_recogize(self.host, query_data, 'audio', self.access_key, self.access_secret, self.timeout, user_params)
         except Exception as e:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
     
-    def recognize_by_file(self, file_path, start_seconds, rec_length=10):
+    def recognize_by_file(self, file_path, start_seconds, rec_length=10, user_params={}):
         res = ''
         try:
             query_data = {}
@@ -213,7 +215,7 @@ class ACRCloudRecognizer:
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path, start_seconds, rec_length)
 
-            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
+            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout, user_params)
             try:
                 json.loads(res)
             except Exception as e:
@@ -222,7 +224,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_filebuffer(self, file_buffer, start_seconds, rec_length=10):
+    def recognize_by_filebuffer(self, file_buffer, start_seconds, rec_length=10, user_params={}):
         res = ''
         try:
             query_data = {}
@@ -236,7 +238,7 @@ class ACRCloudRecognizer:
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
 
-            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
+            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout, user_params)
             try:
                 json.loads(res)
             except Exception as e:
