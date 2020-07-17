@@ -18,6 +18,9 @@ import datetime
 import mimetools
 import json
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 import acrcloud_extr_tool
 
 '''
