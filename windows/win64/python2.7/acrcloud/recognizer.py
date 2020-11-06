@@ -18,6 +18,9 @@ import datetime
 import mimetools
 import json
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 import acrcloud_extr_tool
 
 '''
@@ -73,7 +76,7 @@ class ACRCloudRecognizer:
 
         self.filter_energy_min = config.get('filter_energy_min', 100)
         self.silence_energy_threshold = config.get('silence_energy_threshold', 1000)
-        self.silence_rate_threshold = config.get('silence_rate_threshold', 0.7)
+        self.silence_rate_threshold = config.get('silence_rate_threshold', 0.99)
 
         if self.debug:
             acrcloud_extr_tool.set_debug()
@@ -81,7 +84,6 @@ class ACRCloudRecognizer:
     def post_multipart(self, url, fields, files, timeout):
         content_type, body = self.encode_multipart_formdata(fields, files)
         if not content_type and not body:
-            self.dlog.logger.error('encode_multipart_formdata error')
             return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.HTTP_ERROR_CODE, 'encode_multipart_formdata error')
         try:
             req = urllib2.Request(url, data=body)
@@ -118,7 +120,7 @@ class ACRCloudRecognizer:
             print 'encode_multipart_formdata error' + str(e)
         return None, None
 
-    def do_recogize(self, host, query_data, query_type, access_key, access_secret, timeout=5):
+    def do_recogize(self, host, query_data, query_type, access_key, access_secret, timeout=5, user_params={}):
         http_method = "POST"
         http_url_file = "/v1/identify"
         data_type = query_type
@@ -133,6 +135,8 @@ class ACRCloudRecognizer:
                   'signature':sign, 
                   'data_type':data_type, 
                   "signature_version":signature_version}
+        for k,v in user_params.items():
+            fields[k] = v
        
         sample_bytes = 0
         sample_hum_bytes = 0
@@ -181,7 +185,19 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_file(self, file_path, start_seconds=0, rec_length=10):
+    def recognize_audio(self, file_path, start_seconds=0, rec_length=10, user_params={}):
+        res = ''
+        try:
+            query_data = {}
+            query_data['sample'] = acrcloud_extr_tool.decode_audio_by_file(file_path, start_seconds, rec_length, 8000)
+            if not query_data['sample'] or len(query_data['sample']) < 16000:
+                return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
+            res = self.do_recogize(self.host, query_data, 'audio', self.access_key, self.access_secret, self.timeout, user_params)
+        except Exception as e:
+            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
+        return res
+
+    def recognize_by_file(self, file_path, start_seconds=0, rec_length=10, user_params={}):
         res = ''
         try:
             query_data = {}
@@ -195,7 +211,7 @@ class ACRCloudRecognizer:
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path, start_seconds, rec_length)
 
-            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
+            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout, user_params)
 
             try:
                 json.loads(res)
@@ -206,7 +222,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_filebuffer(self, file_buffer, start_seconds=0, rec_length=10):
+    def recognize_by_filebuffer(self, file_buffer, start_seconds=0, rec_length=10, user_params={}):
         res = ''
         try:
             query_data = {}
@@ -220,6 +236,24 @@ class ACRCloudRecognizer:
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
 
+            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout, user_params)
+            try:
+                json.loads(res)
+            except Exception as e:
+                res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.JSON_ERROR_CODE, str(res))
+        except Exception as e:
+            res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
+        return res
+
+    def recognize_by_fpbuffer(self, fp_buffer, start_seconds=0, rec_length=10):
+        res = ''
+        try:
+            query_data = {}
+            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
+                query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_fpbuffer(fp_buffer, start_seconds, rec_length)
+            #if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
+            #    query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
+
             res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
             try:
                 json.loads(res)
@@ -229,6 +263,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
+
     @staticmethod
     def get_duration_ms_by_file(file_path):
         try:
@@ -237,12 +272,22 @@ class ACRCloudRecognizer:
         except Exception as e:
             return 0
 
+    @staticmethod
+    def get_duration_ms_by_fpbuffer(fp_buffer):
+        try:
+            duration_ms = acrcloud_extr_tool.get_duration_ms_by_fpbuffer(fp_buffer)
+            return duration_ms
+        except Exception as e:
+            return 0
+
+
 class ACRCloudStatusCode:
     HTTP_ERROR_CODE = 3000
     NO_RESULT_CODE = 1001
     DECODE_ERROR_CODE = 2004
     MUTE_ERROR_CODE = 2006
     NOT_HUMMING_ERROR_CODE = 2007
+    AUDIO_ERROR_CODE = 2004
     UNKNOW_ERROR_CODE = 2010
     JSON_ERROR_CODE = 2002
 
