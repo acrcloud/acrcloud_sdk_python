@@ -57,6 +57,7 @@ class ACRCloudRecognizeType:
     ACR_OPT_REC_AUDIO = 0  # audio fingerprint
     ACR_OPT_REC_HUMMING = 1 # humming fingerprint
     ACR_OPT_REC_BOTH = 2 # audio and humming fingerprint
+    ACR_OPT_REC_COVER = 2 # audio and humming fingerprint
 
 class ACRCloudRecognizer:
     def __init__(self, config):
@@ -90,6 +91,7 @@ class ACRCloudRecognizer:
             req.add_header('Content-Type', content_type)
             req.add_header('Referer', url)
             resp = urllib2.urlopen(req, timeout=timeout)
+            #print resp.headers
             ares = resp.read()
             return ares
         except Exception, e:
@@ -160,7 +162,7 @@ class ACRCloudRecognizer:
         res = self.post_multipart(server_url, fields, query_data, timeout)
         return res
 
-    def recognize(self, wav_audio_buffer):
+    def recognize(self, wav_audio_buffer, cfactor=4):
         res = ''
         try:
             query_data = {}
@@ -174,6 +176,8 @@ class ACRCloudRecognizer:
 
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint(wav_audio_buffer)
+            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_COVER:
+                query_data['sample'] = acrcloud_extr_tool.create_cs_fingerprint(wav_audio_buffer, 1, cfactor)
 
             res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
 
@@ -197,7 +201,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_file(self, file_path, start_seconds=0, rec_length=10, user_params={}):
+    def recognize_by_file(self, file_path, start_seconds=0, rec_length=10, user_params={}, cfactor=4):
         res = ''
         try:
             query_data = {}
@@ -210,6 +214,8 @@ class ACRCloudRecognizer:
                 query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False, audio_fingerprint_opt)
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path, start_seconds, rec_length)
+            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_COVER:
+                query_data['sample'] = acrcloud_extr_tool.create_cs_fingerprint_by_file(file_path, start_seconds, rec_length, 1, cfactor)
 
             res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout, user_params)
 
@@ -222,7 +228,7 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_filebuffer(self, file_buffer, start_seconds=0, rec_length=10, user_params={}):
+    def recognize_by_filebuffer(self, file_buffer, start_seconds=0, rec_length=10, user_params={}, cfactor=4):
         res = ''
         try:
             query_data = {}
@@ -235,6 +241,8 @@ class ACRCloudRecognizer:
                 query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, False, audio_fingerprint_opt)
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
+            if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_COVER:
+                query_data['sample'] = acrcloud_extr_tool.create_cs_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, 1, cfactor)
 
             res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout, user_params)
             try:
