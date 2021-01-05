@@ -253,16 +253,14 @@ class ACRCloudRecognizer:
             res = ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.UNKNOW_ERROR_CODE, str(e))
         return res
 
-    def recognize_by_fpbuffer(self, fp_buffer, start_seconds=0, rec_length=10):
+    def recognize_by_fpbuffer(self, fp_buffer, start_seconds=0, rec_length=10, user_params={}):
         res = ''
         try:
             query_data = {}
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_AUDIO or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
                 query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_fpbuffer(fp_buffer, start_seconds, rec_length)
-            #if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-            #    query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
 
-            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout)
+            res = self.do_recogize(self.host, query_data, self.query_type, self.access_key, self.access_secret, self.timeout, user_params)
             try:
                 json.loads(res)
             except Exception as e:
