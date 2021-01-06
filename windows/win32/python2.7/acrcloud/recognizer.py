@@ -63,6 +63,7 @@ class ACRCloudRecognizer:
     def __init__(self, config):
         self.config = config
         self.host = config.get('host', 'ap-southeast-1.api.acrcloud.com')
+        self.endpoint = config.get('endpoint', '/v1/identify')
         self.query_type = 'fingerprint'
         self.access_key = config.get('access_key')
         self.access_secret = config.get('access_secret')
@@ -124,7 +125,7 @@ class ACRCloudRecognizer:
 
     def do_recogize(self, host, query_data, query_type, access_key, access_secret, timeout=5, user_params=None):
         http_method = "POST"
-        http_url_file = "/v1/identify"
+        http_url_file = self.endpoint
         data_type = query_type
         signature_version = "1"
         timestamp = int(time.mktime(datetime.datetime.utcfromtimestamp(time.time()).timetuple()))
