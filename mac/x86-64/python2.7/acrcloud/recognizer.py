@@ -57,7 +57,7 @@ class ACRCloudRecognizeType:
     ACR_OPT_REC_AUDIO = 0  # audio fingerprint
     ACR_OPT_REC_HUMMING = 1 # humming fingerprint
     ACR_OPT_REC_BOTH = 2 # audio and humming fingerprint
-    ACR_OPT_REC_COVER = 2 # audio and humming fingerprint
+    ACR_OPT_REC_COVER = 3 # audio and humming fingerprint
 
 class ACRCloudRecognizer:
     def __init__(self, config):
@@ -69,7 +69,7 @@ class ACRCloudRecognizer:
         self.access_secret = config.get('access_secret')
         self.timeout = config.get('timeout', 5)
         self.recognize_type = config.get('recognize_type', ACRCloudRecognizeType.ACR_OPT_REC_AUDIO)
-        if self.recognize_type > 2 or self.recognize_type < 0:
+        if self.recognize_type > 3 or self.recognize_type < 0:
             self.recognize_type = ACRCloudRecognizeType.ACR_OPT_REC_AUDIO
         self.debug = config.get('debug', False)
         if not self.access_key or not self.access_secret:

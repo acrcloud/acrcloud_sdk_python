@@ -65,7 +65,7 @@ class ACRCloudRecognizer:
         self.access_secret = config.get('access_secret')
         self.timeout = config.get('timeout', 5)
         self.recognize_type = config.get('recognize_type', ACRCloudRecognizeType.ACR_OPT_REC_AUDIO)
-        if self.recognize_type > 2 or self.recognize_type < 0:
+        if self.recognize_type > 3 or self.recognize_type < 0:
             self.recognize_type = ACRCloudRecognizeType.ACR_OPT_REC_AUDIO
         self.debug = config.get('debug', False)
         if not self.access_key or not self.access_secret:
