@@ -16,7 +16,7 @@ Follow one of the tutorials to create a project and get your host, access_key an
  * [How to detect custom audio content by sound](https://www.acrcloud.com/docs/tutorials/identify-audio-custom-content/)
 
 ## Install
-### Linux and macOS user
+### Linux and macOS user (x86)
 
 **python3 -m pip install pyacrcloud**
 
