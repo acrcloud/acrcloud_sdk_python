@@ -9,7 +9,7 @@
 >>Video: mp4, mkv, wmv, flv, ts, avi ...
 
 ## Requirements
-Follow one of the tutorials to create a project and get your host, access_key and access_secret.
+Follow one of these tutorials to create a project and get your host, access_key and access_secret.
 
  * [How to identify songs by sound](https://docs.acrcloud.com/tutorials/recognize-music)
  
@@ -30,7 +30,7 @@ X86/64: [download and install Library(windows/vcredist_x86/x64.exe)](https://www
 
 ## Note
 1. If you run the SDK on Windows, you must install library(vcredist).
-2. ALL version supports humming.
+2. ALL versions support humming.
 3. If you use docker alpine, you need to install "apk add --update libstdc++"
 
 ## Functions
@@ -59,29 +59,29 @@ class ACRCloudRecognizer:
 def create_fingerprint_by_file(file_name, start_time_seconds, audio_len_seconds, is_db_fingerprint, filter_e):
       #file_name: Path of input file; 
       #start_time_seconds: Start time of input file, default is 0; 
-      #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
-      #is_db_fingerprint: If it is True, it will create db frigerprint (Fingerprint for bucket, not for recognition); 
+      #audio_len_seconds: Length of audio data you need. If you create recognize fingerprint, default is 12 seconds, not needed for db fingerprint; 
+      #is_db_fingerprint: If it is True, it will create db fingerprint(fingerprint for bucket, not for recognition); 
       #filter_e: Set it 0; 
 
 def create_humming_fingerprint_by_file(file_name, start_time_seconds, audio_len_seconds):
       #file_name: Path of input file; 
       #start_time_seconds: Start time of input file, default is 0; 
-      #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
+      #audio_len_seconds: Length of audio data you need. if you create recognize fingerprint, default is 12 seconds, not needed for db fingerprint; 
 
 def create_fingerprint_by_filebuffer(data_buffer, start_time_seconds, audio_len_seconds, is_db_fingerprint):
       #data_buffer: data buffer of input file; 
       #start_time_seconds: Start time of input file, default is 0; 
-      #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
-      #is_db_fingerprint: If it is True, it will create db frigerprint (Fingerprint for bucket, not for recognition); 
+      #audio_len_seconds: Length of audio data you need. if you create recognize fingerprint, default is 12 seconds, not needed for db fingerprint; 
+      #is_db_fingerprint: If it is True, it will create db fingerprint (Fingerprint for bucket, not for recognition); 
 
 def create_humming_fingerprint_by_filebuffer(data_buffer, start_time_seconds, audio_len_seconds):
       #data_buffer: data buffer of input file; 
       #start_time_seconds: Start time of input file, default is 0; 
-      #audio_len_seconds: Length of audio data you need. if you create recogize frigerprint, default is 12 seconds, if you create db frigerprint, it is not usefully; 
+      #audio_len_seconds: Length of audio data you need. If you create recognize fingerprint, default is 12 seconds, not needed for db fingerprint; 
 
 def create_fingerprint(data_buffer, is_db_fingerprint):
       #data_buffer: audio data buffer(RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz); 
-      #is_db_fingerprint: If it is True, it will create db frigerprint (Fingerprint for bucket, not for recognition); 
+      #is_db_fingerprint: If it is True, it will create db fingerprint (fingerprint for bucket, not for recognition); 
 
 def create_humming_fingerprint(data_buffer):
       #data_buffer: audio data buffer(RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 8000 Hz); 
