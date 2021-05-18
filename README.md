@@ -1,7 +1,7 @@
 # Audio Recognition Python SDK
 
 ## Overview
-  [ACRCloud](https://www.acrcloud.com/) provides cloud [Automatic Content Recognition](https://www.acrcloud.com/docs/introduction/automatic-content-recognition/) services for [Audio Fingerprinting](https://www.acrcloud.com/docs/introduction/audio-fingerprinting/) based applications such as **[Audio Recognition](https://www.acrcloud.com/music-recognition)** (supports music, video, ads for both online and offline), **[Broadcast Monitoring](https://www.acrcloud.com/broadcast-monitoring)**, **[Second Screen](https://www.acrcloud.com/second-screen-synchronization)**, **[Copyright Protection](https://www.acrcloud.com/copyright-protection-de-duplication)** and etc.<br>
+  [ACRCloud](https://www.acrcloud.com/) provides cloud [Automatic Content Recognition](https://docs.acrcloud.com/) services for [Audio Fingerprinting](https://www.acrcloud.com/audio-fingerprinting/) based applications such as **[Audio Recognition](https://www.acrcloud.com/music-recognition)** (supports music, video, ads for both online and offline), **[Broadcast Monitoring](https://www.acrcloud.com/broadcast-monitoring)**, **[Second Screen](https://www.acrcloud.com/second-screen-synchronization)**, **[Copyright Protection](https://www.acrcloud.com/terms/)** and etc.<br>
   
   This **audio recognition python SDK** support most of audio / video files. 
 
@@ -11,9 +11,9 @@
 ## Requirements
 Follow one of the tutorials to create a project and get your host, access_key and access_secret.
 
- * [How to identify songs by sound](https://www.acrcloud.com/docs/tutorials/identify-music-by-sound/)
+ * [How to identify songs by sound](https://docs.acrcloud.com/tutorials/recognize-music)
  
- * [How to detect custom audio content by sound](https://www.acrcloud.com/docs/tutorials/identify-audio-custom-content/)
+ * [How to detect custom audio content by sound](https://docs.acrcloud.com/tutorials/recognize-custom-content)
 
 ## Install
 ### Linux and macOS user (x86)
@@ -26,8 +26,7 @@ You can run **python -m pip install git+https://github.com/acrcloud/acrcloud_sdk
 
 ## Windows Runtime Library 
 **If you run the SDK on Windows, you must install this library.**<br>
-X86: [download and install Library(windows/vcredist_x86.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=5555)<br>
-x64: [download and install Library(windows/vcredist_x64.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=14632)
+X86/64: [download and install Library(windows/vcredist_x86/x64.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=26999)<br>
 
 ## Note
 1. If you run the SDK on Windows, you must install library(vcredist).
