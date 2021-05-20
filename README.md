@@ -26,8 +26,8 @@ You can run **python -m pip install git+https://github.com/acrcloud/acrcloud_sdk
 
 ## Windows Runtime Library 
 **If you run the SDK on Windows, you must install this library.**<br>
-X86: [download and install Library(windows/vcredist_x86.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=5555)<br>
-x64: [download and install Library(windows/vcredist_x64.exe)](https://www.microsoft.com/en-us/download/details.aspx?id=14632)
+X86: [download and install Library(windows/vcredist_x86.exe)](https://github.com/acrcloud/acrcloud_sdk_python/blob/master/windows/vcredist_x86.exe)<br>
+x64: [download and install Library(windows/vcredist_x64.exe)](https://github.com/acrcloud/acrcloud_sdk_python/blob/master/windows/vcredist_x64.exe)
 
 ## Note
 1. If you run the SDK on Windows, you must install library(vcredist).
