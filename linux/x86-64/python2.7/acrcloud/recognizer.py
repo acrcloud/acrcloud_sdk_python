@@ -221,7 +221,7 @@ class ACRCloudRecognizer:
                 }
                 query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_file(file_path, start_seconds, rec_length, False, audio_fingerprint_opt)
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path, start_seconds, rec_length)
+                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_file(file_path, start_seconds, rec_length, 2)
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_COVER:
                 query_data['sample'] = acrcloud_extr_tool.create_cs_fingerprint_by_file(file_path, start_seconds, rec_length, 1, cfactor)
 
@@ -250,7 +250,7 @@ class ACRCloudRecognizer:
                 }
                 query_data['sample'] = acrcloud_extr_tool.create_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, False, audio_fingerprint_opt)
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_HUMMING or self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_BOTH:
-                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length)
+                query_data['sample_hum'] = acrcloud_extr_tool.create_humming_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, 2)
             if self.recognize_type == ACRCloudRecognizeType.ACR_OPT_REC_COVER:
                 query_data['sample'] = acrcloud_extr_tool.create_cs_fingerprint_by_filebuffer(file_buffer, start_seconds, rec_length, 1, cfactor)
 
