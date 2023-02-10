@@ -1,4 +1,4 @@
-import sys
+import sys, platform
 from os import path
 
 from setuptools import setup, find_packages
@@ -6,7 +6,10 @@ from setuptools import setup, find_packages
 package_path = '.'
 
 if sys.platform == "darwin":  # mac
-    package_path = path.join(package_path, "mac", "x86-64")
+    if platform.machine() == 'arm64':
+        package_path = path.join(package_path, "mac", "aarch64")
+    else:
+        package_path = path.join(package_path, "mac", "x86-64")
 elif not sys.platform.startswith('win'):  # linux
     package_path = path.join(package_path, "linux", "x86-64")
 elif sys.maxsize > 2 ** 32:  # 64 bit windows
