@@ -201,7 +201,7 @@ class ACRCloudRecognizer:
         res = ''
         try:
             query_data = {}
-            query_data['sample'] = acrcloud_extr_tool.decode_audio_by_file(file_path, start_seconds, rec_length, 8000)
+            query_data['sample'] = acrcloud_extr_tool.decode_audio_by_file(file_path, start_seconds, rec_length)
             if not query_data['sample'] or len(query_data['sample']) < 16000:
                 return ACRCloudStatusCode.get_result_error(ACRCloudStatusCode.AUDIO_ERROR_CODE)
             res = self.do_recogize(self.host, query_data, 'audio', self.access_key, self.access_secret, self.timeout, user_params)
