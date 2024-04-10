@@ -1,4 +1,4 @@
-import sys
+import sys, platform
 from os import path
 
 from setuptools import setup, find_packages
@@ -6,8 +6,11 @@ from setuptools import setup, find_packages
 package_path = '.'
 
 if sys.platform == "darwin":  # mac
-    package_path = path.join(package_path, "mac", "x86-64")
-elif sys.platform != "win":  # linux
+    if platform.machine() == 'arm64':
+        package_path = path.join(package_path, "mac", "aarch64")
+    else:
+        package_path = path.join(package_path, "mac", "x86-64")
+elif not sys.platform.startswith('win'):  # linux
     package_path = path.join(package_path, "linux", "x86-64")
 elif sys.maxsize > 2 ** 32:  # 64 bit windows
     package_path = path.join(package_path, "windows", "win64")
@@ -21,7 +24,7 @@ else:
 
 setup(
     name="pyacrcloud",
-    version="1.0.1",
+    version="1.0.0.post2",
     packages=find_packages(package_path),
     package_dir={"": package_path},
 
@@ -29,7 +32,9 @@ setup(
         '': ['*.txt', '*.rst'],
         'acrcloud': ['*.so', '*.pyd'],
     },
-
+    install_requires=[
+        'async_timeout',
+    ],
     author="ACRCloud",
     author_email="support@acrcloud.com",
     description='Python wrapper for acrcloud libraries',
