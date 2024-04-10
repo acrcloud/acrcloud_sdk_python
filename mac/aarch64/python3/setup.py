@@ -3,14 +3,16 @@
 from setuptools import setup, find_packages
 setup(
     name="pyacrcloud",
-    version="1.0.0",
+    version="1.0.0.post4",
     packages=find_packages(),
 
     package_data={
         '': ['*.txt', '*.rst'],
         'acrcloud': ['*.so'],
     },
-
+    install_requires=[
+        'async_timeout',
+    ],
     author="ACRCloud",
     author_email="support@acrcloud.com",
     description='Python wrapper for acrcloud libraries',
