@@ -20,7 +20,7 @@ Follow one of the tutorials to create a project and get your host, access_key an
  * [Recognize Live Channels and Custom Content](https://docs.acrcloud.com/tutorials/recognize-tv-channels-and-custom-content)
 
 ## Install
-### Linux and macOS user (x86)
+### Linux and macOS
 
 **python3 -m pip install pyacrcloud**
 
