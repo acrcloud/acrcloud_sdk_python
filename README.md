@@ -138,6 +138,13 @@ if __name__ == '__main__':
         Video: mp4, mkv, wmv, flv, ts, avi ...'''
     re = ACRCloudRecognizer(config)
 
+    # process each for 10 seconds.
+    filepath = sys.argv[1]
+    duration_ms = int(re.get_duration_ms_by_file(filepath))
+    for i in range(0, duration_ms//1000, 10):
+        res = re.recognize_by_file(filepath, i, 10)
+        print(i, res.strip())
+
     #recognize by file path, and skip 0 seconds from from the beginning of sys.argv[1].
     print re.recognize_by_file(sys.argv[1], 0)
 
