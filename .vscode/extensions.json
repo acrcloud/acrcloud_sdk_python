@@ -3,6 +3,8 @@
         "github.copilot",
         "dongli.python-preview",
         "github.copilot-chat",
-        "ms-dotnettools.vscode-dotnet-runtime"
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "github.codespaces",
+        "eg2.vscode-npm-script"
     ]
 }
