@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-MAINTAINER ACRCloud
+LABEL org.opencontainers.image.authors="ACRCloud"
 
 RUN apk update \
         && apk upgrade \
