@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "github.copilot"
+        "github.copilot",
+        "dongli.python-preview"
     ]
 }
