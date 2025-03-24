@@ -1,6 +1,8 @@
 {
     "recommendations": [
         "github.copilot",
-        "dongli.python-preview"
+        "dongli.python-preview",
+        "github.copilot-chat",
+        "ms-dotnettools.vscode-dotnet-runtime"
     ]
 }
