@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 setup(
     name="pyacrcloud",
-    version="1.0.9",
+    version="1.0.10",
     packages=find_packages(),
 
     package_data={

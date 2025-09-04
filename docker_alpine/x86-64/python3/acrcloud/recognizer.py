@@ -9,7 +9,7 @@ import datetime
 import acrcloud_extr_tool
 
 '''
-Copyright 2015 ACRCloud Recognizer v1.0.9
+Copyright 2015 ACRCloud Recognizer v1.0.10
 
 This module can recognize ACRCloud by most of audio/video file. 
         Audio: mp3, wav, m4a, flac, aac, amr, ape, ogg ...
